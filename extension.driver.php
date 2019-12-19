@@ -44,24 +44,24 @@ class extension_section_icon extends Extension
                 $json .= '}';
                 
                 $tag = new XMLElement('script', $json, array('type'=>'application/json', 'id' => 'section_icon'));
-                Administration::instance()->Page->addElementToHead($tag);
-                Administration::instance()->Page->addScriptToHead(URL . '/extensions/section_icon/assets/section_icon.js');
+                Administration::instance()->Page->addElementToBody($tag);
+                Administration::instance()->Page->addScriptToBody(URL . '/extensions/section_icon/assets/section_icon.js');
             }
             
-            private function getChildrenWithClass($rootElement, $tagName, $className) {
+            private function getChildrenWithId($rootElement, $tagName, $idName) {
                 if (! ($rootElement) instanceof XMLElement) {
                     return null; // not and XMLElement
                 }
                 
-                // contains the right css class and the right node name
-                if (strpos($rootElement->getAttribute('class'), $className) > -1 && $rootElement->getName() == $tagName) {
+                // contains the right css id and the right node name
+                if (strpos($rootElement->getAttribute('id'), $idName) > -1 && $rootElement->getName() == $tagName) {
                     return $rootElement;
                 }
 
                 // recursive search in child elements
                 foreach ($rootElement->getChildren() as $child) {
 
-                    $res = $this->getChildrenWithClass($child, $tagName, $className);
+                    $res = $this->getChildrenWithId($child, $tagName, $idName);
                     
                     if ($res != null) {
                         return $res;
@@ -80,7 +80,7 @@ class extension_section_icon extends Extension
                 $label->appendChild(new XMLElement('p', __('Associate a section with an svg icon. Simply paste the svg here.'), array('class' => 'help')));
                 $fieldset->appendChild($legend);
                 $fieldset->appendChild($label);
-                $this->getChildrenWithClass($context['form'], 'div', 'inner')->appendChild($fieldset);
+                $this->getChildrenWithId($context['form'], 'section', 'primary')->appendChild($fieldset);
             }
             
             public function install()
